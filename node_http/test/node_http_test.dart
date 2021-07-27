@@ -25,7 +25,7 @@ void main() {
           request.response.headers.set('set-cookie',
               ['JSESSIONID=verylongid; Path=/somepath; HttpOnly']);
           request.response.statusCode = HttpStatus.ok;
-          if (body != null && body.isNotEmpty) {
+          if (body.isNotEmpty) {
             request.response.write(body);
           } else {
             request.response.write('ok');
