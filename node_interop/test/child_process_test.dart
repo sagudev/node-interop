@@ -8,8 +8,19 @@ import 'dart:js';
 import 'package:node_interop/child_process.dart';
 import 'package:node_interop/node.dart';
 import 'package:test/test.dart';
+import 'package:logging/logging.dart';
 
 void main() {
+  late StreamSubscription<LogRecord> logSubscription;
+  setUp(() {
+    Logger.root.level = Level.ALL;
+    logSubscription = Logger.root.onRecord.listen((r) => printOnFailure('$r'));
+  });
+
+  tearDown(() {
+    logSubscription.cancel();
+  });
+
   group('child_process', () {
     test('exec successful', () {
       final completer = Completer<int>();

@@ -1,11 +1,14 @@
 // Copyright (c) 2018, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:build/build.dart';
 import 'package:build_modules/build_modules.dart';
 import 'package:build_node_compilers/build_node_compilers.dart';
 import 'package:build_node_compilers/builders.dart';
 import 'package:build_test/build_test.dart';
+import 'package:logging/logging.dart';
 import 'package:test/test.dart';
 
 import 'util.dart';
@@ -13,7 +16,15 @@ import 'util.dart';
 void main() {
   late Map<String, Object> assets;
 
+  late StreamSubscription<LogRecord> logSubscription;
+
+  tearDown(() {
+    logSubscription.cancel();
+  });
+
   setUp(() async {
+    Logger.root.level = Level.ALL;
+    logSubscription = Logger.root.onRecord.listen((r) => printOnFailure('$r'));
     assets = {
       'b|lib/b.dart': '''final world = 'world';''',
       'a|lib/a.dart': '''

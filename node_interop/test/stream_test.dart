@@ -7,8 +7,19 @@ import 'dart:js';
 
 import 'package:node_interop/stream.dart';
 import 'package:test/test.dart';
+import 'package:logging/logging.dart';
 
 void main() {
+  late StreamSubscription<LogRecord> logSubscription;
+  setUp(() {
+    Logger.root.level = Level.ALL;
+    logSubscription = Logger.root.onRecord.listen((r) => printOnFailure('$r'));
+  });
+
+  tearDown(() {
+    logSubscription.cancel();
+  });
+
   group('stream', () {
     test('integration', () async {
       var b = StringBuffer();

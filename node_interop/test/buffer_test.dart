@@ -2,10 +2,23 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 @TestOn('node')
+import 'dart:async';
+
 import 'package:node_interop/buffer.dart';
 import 'package:test/test.dart';
+import 'package:logging/logging.dart';
 
 void main() {
+  late StreamSubscription<LogRecord> logSubscription;
+  setUp(() {
+    Logger.root.level = Level.ALL;
+    logSubscription = Logger.root.onRecord.listen((r) => printOnFailure('$r'));
+  });
+
+  tearDown(() {
+    logSubscription.cancel();
+  });
+
   group('Buffer', () {
     test('from array', () {
       final buffer = Buffer.from([1, 2, 3]);

@@ -1,9 +1,21 @@
 @TestOn('vm')
+import 'dart:async';
 import 'dart:io';
 
 import 'package:test/test.dart';
+import 'package:logging/logging.dart';
 
 void main() {
+  late StreamSubscription<LogRecord> logSubscription;
+  setUp(() {
+    Logger.root.level = Level.ALL;
+    logSubscription = Logger.root.onRecord.listen((r) => printOnFailure('$r'));
+  });
+
+  tearDown(() {
+    logSubscription.cancel();
+  });
+
   group('dartdevc', () {
     setUpAll(() {
       final compile = Process.runSync('pub', [
@@ -15,6 +27,10 @@ void main() {
         '--output',
         'build',
       ]);
+      if (compile.exitCode != 0) {
+        print(compile.stdout);
+        print(compile.stderr);
+      }
       expect(compile.exitCode, 0);
     });
     tearDownAll(() {

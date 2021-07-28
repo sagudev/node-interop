@@ -2,6 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'dart:async';
+
 import 'package:build/build.dart';
 import 'package:build_modules/build_modules.dart';
 import 'package:build_node_compilers/build_node_compilers.dart';
@@ -14,6 +16,16 @@ import 'util.dart';
 
 void main() {
   late Map<String, Object> assets;
+
+  late StreamSubscription<LogRecord> logSubscription;
+  setUp(() {
+    Logger.root.level = Level.ALL;
+    logSubscription = Logger.root.onRecord.listen((r) => printOnFailure('$r'));
+  });
+
+  tearDown(() {
+    logSubscription.cancel();
+  });
 
   group('error free project', () {
     setUp(() async {

@@ -12,6 +12,7 @@ import 'package:node_interop/node.dart';
 import 'package:node_interop/test.dart';
 import 'package:node_interop/util.dart';
 import 'package:test/test.dart';
+import 'package:logging/logging.dart';
 
 const promisesJS = '''
 exports.createPromise = function (value) {
@@ -39,6 +40,16 @@ abstract class JsPromises {
 }
 
 void main() {
+  late StreamSubscription<LogRecord> logSubscription;
+  setUp(() {
+    Logger.root.level = Level.ALL;
+    logSubscription = Logger.root.onRecord.listen((r) => printOnFailure('$r'));
+  });
+
+  tearDown(() {
+    logSubscription.cancel();
+  });
+
   final promises = createFile('promises.js', promisesJS);
 
   test('promiseToFuture', () async {
