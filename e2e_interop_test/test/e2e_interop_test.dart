@@ -18,7 +18,7 @@ void main() {
 
   group('dartdevc', () {
     setUpAll(() {
-      final compile = Process.runSync('pub', [
+      final compile = Process.runSync('dart', [
         'run',
         'build_runner',
         'build',
@@ -27,11 +27,7 @@ void main() {
         '--output',
         'build',
       ]);
-      if (compile.exitCode != 0) {
-        print(compile.stdout);
-        print(compile.stderr);
-      }
-      expect(compile.exitCode, 0);
+      expect(compile.exitCode, 0, reason: compile.stdout);
     });
     tearDownAll(() {
       final buildDir = new Directory('build');
@@ -60,7 +56,7 @@ void main() {
 
   group('dart2js', () {
     setUpAll(() {
-      final compile = Process.runSync('pub', [
+      final compile = Process.runSync('dart', [
         'run',
         'build_runner',
         'build',
