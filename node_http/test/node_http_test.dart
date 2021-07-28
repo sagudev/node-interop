@@ -13,7 +13,6 @@ import 'package:node_io/node_io.dart';
 import 'package:test/test.dart';
 
 void main() {
-
   group('HTTP client', () {
     HttpServer server;
 
