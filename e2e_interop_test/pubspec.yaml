@@ -13,6 +13,6 @@ dev_dependencies:
     path: ../build_node_compilers
   # TODO: Unpin js and node_interop after migrating build_node_compilers to
   # nnbd.
-  js: '<=0.6.2' # ^0.6.3
-  node_interop: '<=1.2.1'
-    # path: ../node_interop
+  js: '^0.6.3' # ^0.6.3
+  node_interop:
+    path: ../node_interop
