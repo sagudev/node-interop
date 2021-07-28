@@ -1,31 +1,21 @@
 // Copyright (c) 2017, Anatoly Pulyaevskiy. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
+// @dart=2.9
+
 @TestOn('node')
 library http_test;
 
-import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:node_http/node_http.dart' as http;
-import 'package:node_io/node_io.dart' hide HttpServer;
+import 'package:node_io/node_io.dart';
 import 'package:test/test.dart';
-import 'package:logging/logging.dart';
 
 void main() {
-  late StreamSubscription<LogRecord> logSubscription;
-  setUp(() {
-    Logger.root.level = Level.ALL;
-    logSubscription = Logger.root.onRecord.listen((r) => printOnFailure('$r'));
-  });
-
-  tearDown(() {
-    logSubscription.cancel();
-  });
 
   group('HTTP client', () {
-    late HttpServer server;
+    HttpServer server;
 
     setUpAll(() async {
       server = await HttpServer.bind('127.0.0.1', 8181);
